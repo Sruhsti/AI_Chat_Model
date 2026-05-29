@@ -1,0 +1,12 @@
+fastapi[standard]
+sqlalchemy
+alembic
+pymysql
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==3.2.2
+python-multipart
+httpx
+anthropic
+python-dotenv
+email-validator
