@@ -1,9 +1,12 @@
 # to run :: python -m uvicorn main:app --reload
-from fastapi import FastAPI, requests
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import time
 from database import Base, engine
 from routers import conversations, chat, users
+import uvicorn
+from fastapi.responses import FileResponse
+
 
 
 Base.metadata.create_all(bind=engine)
@@ -15,7 +18,7 @@ app = FastAPI(
 )
 
 @app.middleware("http")
-async def add_process_time_header(request: requests.Request, call_next):
+async def add_process_time_header(request: Request, call_next):
     start_time = time.perf_counter()
     response = await call_next(request)
     process_time = time.perf_counter() - start_time
@@ -38,4 +41,9 @@ app.include_router(chat.router)
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the AI Chat API!"}
+    return FileResponse("index.html")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+

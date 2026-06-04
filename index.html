@@ -1552,7 +1552,21 @@
         const input = document.getElementById('message-input');
         const text  = input.value.trim();
         if (!text) return;
-        if (!currentConvId) { showToast('Please select or create a conversation first', 'error'); return; }
+        if (!currentConvId) {
+            const words = text.split(/\s+/).slice(0, 5).join(' ');
+            const autoTitle = words.length < text.length ? words + '…' : words;
+            try {
+                const conv = await apiFetch('/conversations/', {
+                    method: 'POST',
+                    body:   JSON.stringify({ title: autoTitle })
+                });
+                await loadConversations();
+                await selectConv(conv.id, conv.title);
+            } catch {
+                showToast('Failed to create conversation', 'error');
+                return;
+            }
+        }
 
         input.value = '';
         input.style.height = 'auto';
