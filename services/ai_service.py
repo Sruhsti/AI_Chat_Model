@@ -1,11 +1,12 @@
 from openai import AsyncOpenAI
-from config import API_KEY
+from config import API_KEY, BASE_URL
 from collections.abc import AsyncIterable
+
 
 
 client = AsyncOpenAI(
     api_key=API_KEY,
-    base_url="https://openrouter.ai/api/v1"
+    base_url=BASE_URL
 )
 
 async def get_ai_response(messages: list[dict]) -> AsyncIterable[str]:
