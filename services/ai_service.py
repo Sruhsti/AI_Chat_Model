@@ -1,21 +1,24 @@
-import anthropic
+from openai import AsyncOpenAI
 from config import API_KEY
 from collections.abc import AsyncIterable
 
 
-client = anthropic.AsyncAnthropic(
-    api_key=API_KEY
+client = AsyncOpenAI(
+    api_key=API_KEY,
+    base_url="https://openrouter.ai/api/v1"
 )
 
 async def get_ai_response(messages: list[dict]) -> AsyncIterable[str]:
-
-    async with client.messages.stream(
-        model="claude-opus-4-5-20251101",
+    stream = await client.chat.completions.create(
+        model="deepseek/deepseek-v4-pro",
         max_tokens=1024,
-        messages=messages
-    ) as stream:
-        async for text in stream.text_stream:
-            yield text 
+        messages=messages,
+        stream=True
+    )
+    async for chunk in stream:
+        content = chunk.choices[0].delta.content
+        if content:
+            yield content
 
 
 
