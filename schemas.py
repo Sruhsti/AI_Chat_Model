@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Literal
 
 
 class Token(BaseModel):
@@ -37,6 +38,8 @@ class ConversationPublic(BaseModel):
     id: int
     title: str | None = None
     created_at: datetime
+    share_id: str | None = None
+    is_public: bool = False
     model_config = {"from_attributes": True}
 
 class ConversationUpdate(BaseModel):
@@ -61,6 +64,23 @@ class ConversationWithMessages(ConversationPublic):
 class ChatRequest(BaseModel):
     conversation_id: int
     message: str
+    source: Literal["internal", "external"] | None = "external"  # default to "external" if not provided
+    document_id : int | None = None  # optional field for document ID
 
+class DocumentPublic(BaseModel):
+    id: int
+    filename: str
+    created_at: datetime
+    model_config = {"from_attributes": True}
 
-        
+class DocumentUploadResponse(BaseModel):
+    document_id: int    
+    message: str
+    filename: str   
+
+class DocumentChunkPublic(BaseModel):
+    id: int
+    chunk_index: int
+    chunk_text: str
+    model_config = {"from_attributes": True}
+

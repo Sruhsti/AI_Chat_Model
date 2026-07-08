@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import time
 from database import Base, engine
-from routers import conversations, chat, users
+from routers import conversations, chat, users, documents
 import uvicorn
 from fastapi.responses import FileResponse
 
@@ -37,6 +37,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(conversations.router)
 app.include_router(chat.router)
+app.include_router(documents.router)
 
 
 @app.get("/")

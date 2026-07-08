@@ -10,3 +10,6 @@ httpx
 anthropic
 python-dotenv
 email-validator
+pypdf
+sentence-transformers
+numpy
